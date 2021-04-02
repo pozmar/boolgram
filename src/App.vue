@@ -26,13 +26,26 @@ export default {
     Left,
     Right
   },
+  
 }
 
 </script>
 
 <style lang="scss" scoped>
-.container{
-  display:flex;
-  justify-content:center;
-}
+  *{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-size:20px;
+    font-family: serif;
+  }
+  header{
+        box-shadow: 0 2px 2px -2px lightgrey;
+    }
+  .container{
+    display:flex;
+    justify-content:center;
+    width:80%;
+    margin:0 auto;
+  }
 </style>

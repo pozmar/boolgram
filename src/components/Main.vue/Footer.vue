@@ -14,5 +14,9 @@ export default {
 <style lang="scss" scoped>
 .footer p{
     display:inline-block;
+    color:lightgrey;
+}
+i{
+  color:lightgrey;
 }
 </style>

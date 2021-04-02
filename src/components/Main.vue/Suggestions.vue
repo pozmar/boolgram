@@ -25,31 +25,39 @@ data(){
     }
   },
   mounted(){
-
+      setTimeout(()=>{
       axios.get('https://flynn.boolean.careers/exercises/api/boolgram/profiles').then(res=>this.profiles=res.data)
-      console.log(this.profiles);
-      }
+      console.log(this.profiles)},3000)
       
   }
-
+}
 </script>
 
 <style lang="scss" scoped>
     .header{
         display:flex;
         justify-content: space-between;
+        margin-bottom: 30px;
+        align-items: center;
+    }
+    ul{
+      margin: 0;
+      padding: 0;
     }
     ul li{
         display:flex;
         justify-content: space-between;
+        margin: 30px 0;
+        align-items: center;
           .users{
             display:flex;
             align-items: center;
           
             img{
-              width:40px;
-              height:40px;
+              width:60px;
+              height:60px;
               border-radius: 50%;
+              margin-right: 20px;
             }
             p{
               display:inline-block;
@@ -57,5 +65,17 @@ data(){
               font-weight: bold;
             }
           }
+        }
+        .header a{
+          color: black;
+          text-decoration:none;
+          font-weight:bold;
+        }
+        .header p{
+          color: grey;
+        }
+        ul li a{
+          text-decoration: none;
+          color: #0095f6;
         }
 </style>

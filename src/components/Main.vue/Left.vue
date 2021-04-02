@@ -1,10 +1,10 @@
 <template>
   <div class="left">
     <Stories/>
-    <div class="container">
+    
       <Story/>
       
-    </div>
+    
   </div>
 </template>
 

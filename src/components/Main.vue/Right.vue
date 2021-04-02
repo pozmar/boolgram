@@ -22,6 +22,6 @@ export default {
 <style lang="scss" scoped>
 .right{
     width:40%;
-    margin: 100px 10px;
+    margin: 100px 50px;
 }
 </style>
