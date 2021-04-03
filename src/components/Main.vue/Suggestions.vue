@@ -4,7 +4,58 @@
         <p>Suggerimenti per te</p>
         <a href="">Mostra tutti</a>
       </div>
-      <ul>
+      
+       <ul v-if="loaded==true">
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+          <li>
+            <div class="user-loader">
+              <div class="image-loader"></div>
+              <div class="name-loader"></div>
+          </div>
+          </li>
+        </ul>
+        <ul>
           <li :key="i" v-for="(profile, i) in profiles">
               <div class="users">
                 <img :src="profile.profile_picture" alt="">
@@ -22,12 +73,19 @@ export default {
 data(){
     return{
       profiles: undefined,
+       loaded: true
     }
   },
   mounted(){
       setTimeout(()=>{
-      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/profiles').then(res=>this.profiles=res.data)
+      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/profiles').then(res=>this.profiles=res.data).then(this.setLoad)
       console.log(this.profiles)},3000)
+      
+  },
+  methods: {
+        setLoad(){
+          this.loaded =!this.loaded;
+        }
       
   }
 }
@@ -78,4 +136,33 @@ data(){
           text-decoration: none;
           color: #0095f6;
         }
+        .user-loader{
+          display:flex;
+          justify-content:flex-start;
+          align-items: center;
+        }
+       .image-loader{
+         width:60px;
+         height:60px;
+         border-radius: 50%;
+         background-color:lightgrey;
+         border: 1px solid grey;
+       }
+       .name-loader{
+         width:120px;
+         height: 20px;
+         background-image: linear-gradient(to right, lightgrey, white);
+         animation: load 1s ease infinite;
+         background-size: 200%;
+         margin-left: 20px;
+       }
+       @keyframes load {
+    
+    0%{
+      background-position:left;
+    }
+    100%{
+      background-position: right;
+    }
+       }
 </style>

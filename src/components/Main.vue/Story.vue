@@ -1,6 +1,18 @@
 <template>
-<div>
-  <div class="story" :key="i" v-for="(story, i) in stories">
+
+  
+  <div class="story">
+    <div class="header-loader" v-if="loaded==true">
+      <div class="img-loader"></div>
+      <div class="lines">
+        <div class="line-one"></div>
+        <div class="line-two"></div>
+      </div>
+    </div>
+    <div class="image-loader" v-if="loaded==true">
+       
+      </div>
+    <div class="container" :key="i" v-for="(story, i) in stories">
       <div class="header">
           <div class="profile"><img :src="story.profile_picture" alt=""></div>
           <div class="name"><p>{{story.profile_name}}</p></div>
@@ -63,12 +75,13 @@ export default {
       stories: undefined,
       isActive: false,
       locale: "en",
-      value: new Date()
+      value: new Date(),
+      loaded: true
     }
   },
   mounted(){
       setTimeout(()=>{
-      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/posts').then(res=>this.stories=res.data).then(this.show)}, 3000)
+      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/posts').then(res=>this.stories=res.data).then(this.show).then(this.setLoad)}, 3000)
   },
 
   methods:{
@@ -77,6 +90,9 @@ export default {
         this.isActive =!this.isActive;
        
       },
+      setLoad(){
+          this.loaded =!this.loaded;
+        }
        
   }
 }
@@ -181,5 +197,47 @@ export default {
       time-ago{
         font-family: serif;
         color:red;
+      }
+      //loader
+      .header-loader{
+        height:100px;
+        display:flex;
+        justify-content:flex-start;
+        align-items: center;
+      }
+      .img-loader{
+        width:60px;
+        height:60px;
+        border-radius:50%;
+        background-color:grey;
+      }
+      .lines{
+        margin: 0 20px;
+      }
+      .line-one{
+        width:120px;
+        height:20px;
+        background-color:grey;
+        margin-bottom: 10px;
+      }
+      .line-two{
+        width: 80px;
+        height:20px;
+        background-color:grey;
+      }
+      .image-loader{
+        width: 700px;
+        height:700px;
+        background-image: linear-gradient(to right, lightgrey, white);
+        animation: load 1s ease infinite;
+        background-size: 200%;
+      }
+      @keyframes load{
+        0%{
+            background-position:left;
+          }
+        100%{
+            background-position: right;
+            }
       }
 </style>
