@@ -28,10 +28,22 @@
   </div>
      
     <div class="image">
-      <div class="img" :key="i" v-for="(image, i) in images"><img v-if="i<=4" :src="image.profile_picture" alt="">
-      <span v-if="i<=4"><strong>{{image.profile_name}}</strong></span>
+      <div class="img" @click="activate(), open(profile)" :key="i" v-for="(profile, i) in profiles">
+        <img v-if="i<=4" :src="profile.profile_picture" alt="">
+        <span v-if="i<=4"><strong>{{profile.profile_name}}</strong></span>
+        
       </div>
+ 
     </div>
+  </div>
+
+   <div class="my-story" :class="isActive==true?'block':'hide'">
+    <span @click="activate()">X</span>
+    <div v-if="typeof activeProfile !== 'undefined'" >
+    <img v-if="typeof activeProfile !== 'undefined'" :src="activeProfile.profile_picture" alt="" >
+    
+</div>
+
   </div>
 </div>
 </template>
@@ -42,22 +54,49 @@ export default {
   
     data(){
     return{
-      images: undefined,
-      loaded: true
+      profiles: undefined,
+      loaded: true,
+      isActive:false,
+      activeProfile: undefined,
+      
+     
       
     }
   },
+  created(){
+    
+  },
   mounted(){
       setTimeout(()=>{
-      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/profiles').then(res=>this.images=res.data).then(this.setLoad)
+      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/profiles').then(res=>this.profiles=res.data).then(this.setLoad).then(this.setActive);
+      
       }, 3000)
-      },
+  },
+  
       methods: {
         setLoad(){
           this.loaded =!this.loaded;
+        },
+        activate(){
+          this.isActive =!this.isActive;
+        },
+        setActive(){
+           this.activeProfile=this.profiles[0]
+           console.log(this.activeProfile);
+        },
+        open(profile){
+         
+          this.activeProfile = profile;
+          console.log(profile);
+          console.log(this.activeProfile);
+           
+          
         }
       
-  }
+  },
+ 
+
+  
 }
 
 </script>
@@ -129,5 +168,21 @@ export default {
       to{
         transform: rotate(1turn);
       }
+    }
+    .my-story{
+      height:80vh;
+      width:70%;
+      background-color: #272727;
+      position:absolute;
+      top: 10%;
+        span{
+          float: right;
+        }
+    }
+    .block{
+      display:block;
+    }
+    .hide{
+      display:none;
     }
 </style>

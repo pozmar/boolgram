@@ -12,7 +12,7 @@
     <div class="image-loader" v-if="loaded==true">
        
       </div>
-    <div class="container" :key="i" v-for="(story, i) in stories">
+    <div class="container" :key="i" v-for="(story, i) in stories" v-on:intersect="intersected">
       <div class="header">
           <div class="profile"><img :src="story.profile_picture" alt=""></div>
           <div class="name"><p>{{story.profile_name}}</p></div>
@@ -72,20 +72,33 @@ export default {
   },
  data(){
     return{
-      stories: undefined,
+      stories: [],
       isActive: false,
       locale: "en",
       value: new Date(),
-      loaded: true
+      loaded: true,
+      observer:null
+      
     }
   },
-  mounted(){
-      setTimeout(()=>{
-      axios.get('https://flynn.boolean.careers/exercises/api/boolgram/posts').then(res=>this.stories=res.data).then(this.show).then(this.setLoad)}, 3000)
-  },
 
-  methods:{
+ 
+  mounted() {
+   
+    setTimeout(()=>{
     
+     axios.get('https://flynn.boolean.careers/exercises/api/boolgram/posts').then(res=>this.stories=res.data).then(this.setLoad()).then(this.show());
+    
+  }, 3000)
+    
+  this.observer = new IntersectionObserver(([entry])=>{
+    if(entry && entry.isIntersecting){
+      this.$emit('intersect');
+    }
+  });
+  this.observer.observe(this.$el);
+  },
+  methods:{
       show(){
         this.isActive =!this.isActive;
        
@@ -100,12 +113,8 @@ export default {
 
 <style lang="scss" scoped>
   .story{
-    border: 1px solid lightgrey;
     padding:10px;
-    
-    
     margin:50px 0;
-    
       .header{
         display:flex;
         align-items: center;
@@ -131,6 +140,11 @@ export default {
         width: 100%;
         
       }
+  }
+  .container{
+    margin: 50px 0px;
+    border: 2px solid lightgrey;
+    padding:20px;
   }
     .container-comment .header{
       display:flex;

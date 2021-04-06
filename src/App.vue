@@ -39,6 +39,9 @@ export default {
     font-size:20px;
     font-family: serif;
   }
+  #app{
+    position: relative;
+  }
   header{
         box-shadow: 0 2px 2px -2px lightgrey;
     }
