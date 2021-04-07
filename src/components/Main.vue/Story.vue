@@ -12,7 +12,8 @@
     <div class="image-loader" v-if="loaded==true">
        
       </div>
-    <div class="container" :key="i" v-for="(story, i) in stories" v-on:intersect="intersected">
+      <div>
+    <div class="container" :key="i" v-for="(story, i) in stories" data-aos-offset="100" data-aos-easing="ease-out-back" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="limit">
       <div class="header">
           <div class="profile"><img :src="story.profile_picture" alt=""></div>
           <div class="name"><p>{{story.profile_name}}</p></div>
@@ -59,6 +60,11 @@
       </div>
 
     </div>
+  
+  
+  </div>
+  <button @click="loadMore()" v-if="this.stories.length<8">Vedi altri post</button>
+  <button v-else>Non ci sono altri contenuti</button>
   </div>
 </div>
 </template>
@@ -77,28 +83,39 @@ export default {
       locale: "en",
       value: new Date(),
       loaded: true,
-      observer:null
+      loading:false,
+      busy:false,
+      limit:1
+      
       
     }
   },
 
  
   mounted() {
-   
+    
+      
     setTimeout(()=>{
-    
-     axios.get('https://flynn.boolean.careers/exercises/api/boolgram/posts').then(res=>this.stories=res.data).then(this.setLoad()).then(this.show());
-    
+    this.loadMore();
+    this.setLoad();
+    this.show();
   }, 3000)
-    
-  this.observer = new IntersectionObserver(([entry])=>{
-    if(entry && entry.isIntersecting){
-      this.$emit('intersect');
-    }
-  });
-  this.observer.observe(this.$el);
   },
+  
   methods:{
+   
+      loadMore(){
+         this.busy = true;
+         axios.get(`https://flynn.boolean.careers/exercises/api/boolgram/posts`).then(response => {
+         const append = response.data.slice(
+          this.stories.length,
+          this.stories.length + this.limit
+        );
+        
+        this.stories = this.stories.concat(append);
+        this.busy = false;
+      })
+      },
       show(){
         this.isActive =!this.isActive;
        
@@ -109,6 +126,7 @@ export default {
        
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

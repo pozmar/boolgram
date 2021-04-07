@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import TimeAgo from 'vue2-timeago'
+import VueInfiniteScroll from '@grafikri/vue-infinite-scroll'
+Vue.use(VueInfiniteScroll)
+
 
 
 
