@@ -44,6 +44,7 @@ export default {
   }
   header{
         box-shadow: 0 2px 2px -2px lightgrey;
+        position: relative;
     }
   .container{
     display:flex;

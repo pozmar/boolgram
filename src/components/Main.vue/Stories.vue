@@ -28,7 +28,7 @@
   </div>
      
     <div class="image">
-      <div class="img" @click="activate(), open(profile)" :key="i" v-for="(profile, i) in profiles">
+      <div class="img" @click="toggle(),activate(), open(profile)" :key="i" v-for="(profile, i) in profiles">
         <img v-if="i<=4" :src="profile.profile_picture" alt="">
         <span v-if="i<=4"><strong>{{profile.profile_name}}</strong></span>
         
@@ -36,15 +36,18 @@
  
     </div>
   </div>
+    <fullscreen ref="fullscreen" @change="fullscreenChange">
+      
+        
+        <div v-if="typeof activeProfile !== 'undefined'" :class="fullscreen==true?'flex':'hide'">
+            <img v-if="typeof activeProfile !== 'undefined'" :src="activeProfile.profile_picture" alt="" >
+            <span @click="toggle()">X</span>
+        </div>
+      
+    </fullscreen>
+   
 
-   <div class="my-story" :class="isActive==true?'block':'hide'">
-    <span @click="activate()">X</span>
-    <div v-if="typeof activeProfile !== 'undefined'" >
-    <img v-if="typeof activeProfile !== 'undefined'" :src="activeProfile.profile_picture" alt="" >
-    
-</div>
-
-  </div>
+ 
 </div>
 </template>
 
@@ -58,6 +61,9 @@ export default {
       loaded: true,
       isActive:false,
       activeProfile: undefined,
+      fullscreen:false
+    
+      
       
      
       
@@ -77,9 +83,19 @@ export default {
         setLoad(){
           this.loaded =!this.loaded;
         },
-        activate(){
+         activate(){
           this.isActive =!this.isActive;
+          console.log(this.isActive);
         },
+        changingStatus(){
+          if(this.isActive == true){
+            setTimeout(() => {
+              
+            }, 5000);
+            return this.isActive == false;
+          }
+        },
+        
         setActive(){
            this.activeProfile=this.profiles[0]
            console.log(this.activeProfile);
@@ -89,15 +105,19 @@ export default {
           this.activeProfile = profile;
           console.log(profile);
           console.log(this.activeProfile);
-           
-          
-        }
-      
+        },
+        toggle () {
+        this.$refs['fullscreen'].toggle();
+        
+        
+      },
+        fullscreenChange (fullscreen) {
+        this.fullscreen = fullscreen;
+        console.log(this.fullscreen);
+      }
+       
   },
- 
-
-  
-}
+  }
 
 </script>
 
@@ -170,17 +190,21 @@ export default {
       }
     }
     .my-story{
-      height:80vh;
-      width:70%;
+      height:100vh;
+      width:100%;
       background-color: #272727;
-      position:absolute;
-      top: 10%;
+      position: absolute;
+      top: 0;
+      left: 0;
         span{
           float: right;
+          color:white;
         }
     }
-    .block{
-      display:block;
+    .flex{
+      display:flex;
+      justify-content: center;
+      align-items: center;
     }
     .hide{
       display:none;
