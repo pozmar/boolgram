@@ -47,6 +47,10 @@
                 <span v-if="isActive == false? i<=2: comment">{{comment.text}} </span>
                 
                 </div>
+                <div class="my-comment" v-if="typeof(activeProfile) !== 'undefined'">
+                <span><strong>{{activeProfile.newMessage}}</strong></span>
+                <span>{{activeProfile.newMessage}}</span>
+                </div>
                 <div class="time">
                   <time-ago :datetime="story.date.date" :locale="locale"></time-ago>
                   <span>fa</span>
@@ -55,8 +59,12 @@
 
       </div>
       <div class="write">
-          <input type="text" placeholder="Aggiungi un commento">
-          <a href=""><strong>Pubblica</strong></a>
+          <input 
+          type="text"  
+          placeholder="Aggiungi un commento"
+          v-model="input.text"
+          @click="open(story)">
+          <button @click="submit()"><strong>Pubblica</strong></button>
       </div>
 
     </div>
@@ -85,21 +93,32 @@ export default {
       loaded: true,
       loading:false,
       busy:false,
-      limit:1
+      limit:1,
+      myUser:{
+        profilePicture:"assets/profile.png",
+        username:"pozmar"
+      },
+      input:{
+        text:'',
+        username: 'pozmar'
+      },
+      textList: [],
+      activeProfile:'undefined'
       
       
     }
   },
-
- 
   mounted() {
-    
-      
     setTimeout(()=>{
     this.loadMore();
     this.setLoad();
     this.show();
+    this.setActive();
+    
+    
   }, 3000)
+   
+    
   },
   
   methods:{
@@ -114,7 +133,9 @@ export default {
         
         this.stories = this.stories.concat(append);
         this.busy = false;
-      })
+        
+      }).then(this.setActive);
+     
       },
       show(){
         this.isActive =!this.isActive;
@@ -122,9 +143,42 @@ export default {
       },
       setLoad(){
           this.loaded =!this.loaded;
+        },
+      setActive(){
+           this.activeProfile=this.stories[0]
+          
+        },
+      open(story){
+         
+          this.activeProfile = story;
+          console.log(this.activeProfile);
+         
+        },
+        
+      submit(){
+        if(this.input.text != '' && typeof(this.activeProfile) !== 'undefined'){
+         let newMessage = {...this.input};
+         console.log(newMessage);
+          this.activeProfile.comments.push(newMessage);
+          this.input.text ='';
+          
+          
+        } 
+      
+      }
+  },
+      computed:{
+        lastcomment(){
+          if(typeof(this.activeProfile) !== 'undefined'){
+             return this.activeProfile.comments.slice(-1)[0];
         }
+        console.log(this.lastcomment);
+        return this.activeProfile.comments.slice(-1)[0];
+        
+      }
+      }
        
-  }
+      
 }
 
 </script>

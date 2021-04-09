@@ -39,11 +39,11 @@
     <fullscreen ref="fullscreen" @change="fullscreenChange">
       
         
-        <div v-if="typeof activeProfile !== 'undefined'" :class="fullscreen==true?'flex':'hide'">
+        <div class="box-full" v-if="typeof activeProfile !== 'undefined'" :class="fullscreen==true?'flex':'hide'">
             <img v-if="typeof activeProfile !== 'undefined'" :src="activeProfile.profile_picture" alt="" >
-            <span @click="toggle()">X</span>
+           
         </div>
-      
+         <span @click="toggle()" :class="fullscreen==true?'flex':'hide'">X</span>
     </fullscreen>
    
 
@@ -85,7 +85,7 @@ export default {
         },
          activate(){
           this.isActive =!this.isActive;
-          console.log(this.isActive);
+          
         },
         changingStatus(){
           if(this.isActive == true){
@@ -103,7 +103,6 @@ export default {
         open(profile){
          
           this.activeProfile = profile;
-          console.log(profile);
           console.log(this.activeProfile);
         },
         toggle () {
@@ -189,17 +188,25 @@ export default {
         transform: rotate(1turn);
       }
     }
-    .my-story{
-      height:100vh;
-      width:100%;
-      background-color: #272727;
-      position: absolute;
-      top: 0;
-      left: 0;
-        span{
-          float: right;
-          color:white;
+    :fullscreen{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+        .box-full{
+          display:flex;
+          flex-direction:column;
+          width:50%;
+          margin: 0 auto;
+            img{
+              width:70%;
+            }
         }
+        span{
+          align-self: baseline;
+          color:white;
+
+        
+      }
     }
     .flex{
       display:flex;
