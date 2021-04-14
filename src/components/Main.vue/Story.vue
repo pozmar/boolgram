@@ -13,7 +13,9 @@
        
       </div>
       <div>
-    <div class="container" :key="i" v-for="(story, i) in stories" data-aos-offset="100" data-aos-easing="ease-out-back" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="limit">
+    <div class="container" :key="i" v-for="(story, i) in stories" data-aos-offset="100" data-aos="fade-up"
+     data-aos-easing="linear"
+     data-aos-duration="1500" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="limit">
       <div class="header">
           <div class="profile"><img :src="story.profile_picture" alt=""></div>
           <div class="name"><p>{{story.profile_name}}</p></div>
@@ -26,20 +28,28 @@
   
    <div class="container-comment">
       <div class="header">
+        <!--<span v-if="story.liked===false"><i class="far fa-heart fa-2x" @click="open(story)"></i>
+          </span>
+          <span v-else>
+          <i class="fas fa-heart fa-2x" @click="open(story)"></i>
+          </span>-->
           <i class="far fa-heart fa-2x"></i>
           <i class="far fa-comment fa-2x"></i>
 
       </div>
       <div class="likes">
           <div class="image" v-if="typeof(story.likes !== 'undefined') && typeof(story.likes[0]) !== 'undefined'"><img :src="story.likes[0].profile_picture" alt=""></div>
-          <p>Piace a <span  v-if="typeof(story.likes !== 'undefined') && typeof(story.likes[0]) !== 'undefined'"><strong>{{story.likes[0].username}}</strong></span> e <strong><span>{{story.likes.length}}</span> altri</strong></p>
+          <p>Piace a <span  v-if="typeof(story.likes) !== 'undefined' && typeof(activeProfile) !== 'undefined' && typeof(story.likes[0]) !== 'undefined'"><strong>{{story.likes[0].username}}</strong>
+          </span> 
+          
+          e <strong><span>{{story.likes.length}}</span> altri</strong></p>
 
       </div>
       <div class="comments">
           <div class="user-comment">
               <span><strong>{{story.profile_name}}</strong></span>
               <span>{{story.post_text}} </span>
-              <button href="#" @click="show()">Mostra tutti e <span>{{story.comments.length}}</span> i commenti</button>
+              <button href="#" class="btn-comments" @click="show()">Mostra tutti e <span>{{story.comments.length}}</span> i commenti</button>
               
               
                 <div class="comment" :key="i" v-for="(comment,i) in story.comments">
@@ -52,8 +62,9 @@
                 <span>{{activeProfile.newMessage}}</span>
                 </div>
                 <div class="time">
+
                   <time-ago :datetime="story.date.date" :locale="locale"></time-ago>
-                  <span>fa</span>
+                  <span class="ago">ago</span>
               </div>
           </div>
 
@@ -64,7 +75,7 @@
           placeholder="Aggiungi un commento"
           v-model="input.text"
           @click="open(story)">
-          <button @click="submit()"><strong>Pubblica</strong></button>
+          <button class="btn-add" @click="submit()"><strong>Pubblica</strong></button>
       </div>
 
     </div>
@@ -87,13 +98,14 @@ export default {
  data(){
     return{
       stories: [],
-      isActive: false,
+      isActive: true,
       locale: "en",
       value: new Date(),
       loaded: true,
       loading:false,
       busy:false,
       limit:1,
+      liked: false,
       myUser:{
         profilePicture:"assets/profile.png",
         username:"pozmar"
@@ -102,10 +114,11 @@ export default {
         text:'',
         username: 'pozmar'
       },
-      textList: [],
-      activeProfile:'undefined'
-      
-      
+      activeProfile:'undefined',
+      like:{
+        profilePicture:"assets/profile.png",
+        username:"pozmar"
+      }
     }
   },
   mounted() {
@@ -114,8 +127,7 @@ export default {
     this.setLoad();
     this.show();
     this.setActive();
-    
-    
+    this.addLike();
   }, 3000)
    
     
@@ -134,7 +146,7 @@ export default {
         this.stories = this.stories.concat(append);
         this.busy = false;
         
-      }).then(this.setActive);
+      }).then(this.setActive).then(this.addLike);
      
       },
       show(){
@@ -149,36 +161,55 @@ export default {
           
         },
       open(story){
-         
           this.activeProfile = story;
           console.log(this.activeProfile);
-         
+           
         },
         
       submit(){
         if(this.input.text != '' && typeof(this.activeProfile) !== 'undefined'){
          let newMessage = {...this.input};
-         console.log(newMessage);
-          this.activeProfile.comments.push(newMessage);
-          this.input.text ='';
-          
-          
-        } 
-      
-      }
-  },
-      computed:{
-        lastcomment(){
-          if(typeof(this.activeProfile) !== 'undefined'){
-             return this.activeProfile.comments.slice(-1)[0];
+         this.activeProfile.comments.push(newMessage);
+         this.input.text ='';
         }
-        console.log(this.lastcomment);
-        return this.activeProfile.comments.slice(-1)[0];
+      },
+      /*likes() {
+        if(typeof(this.activeProfile) !== 'undefined'){
+          let newLike={...this.like};
+          
+        this.activeProfile.likes.push(newLike);
+        this.activeProfile.liked =true;
+        //console.log(this.activeProfile.likes); 
+        }
+      },
+      dislike() {
         
-      }
-      }
+        if(typeof(this.activeProfile) !== 'undefined' && typeof(this.activeProfile.likes)!== 'undefined'){
+          
+                this.activeProfile.likes.splice(-1);
+                this.activeProfile.liked =false;
+                //console.log(this.activeProfile);
+            
+          }
+        },
+        addLike(){
+          for(let i = 0; i <this.stories.length; i++){
+            this.stories[i].liked=false;
+             //console.log(this.stories);
+          }
+         
+            
+          },
+        isLiked(story){
        
+        this.story.liked =!this.story.liked;
+        console.log(story); 
+        },*/
+        
       
+       
+  },
+    
 }
 
 </script>
@@ -259,6 +290,12 @@ export default {
     .time{
       margin-top: 30px;
       margin-bottom:20px;
+      .ago{
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        color: #657786;
+      }
    }
    .write{
      display: flex;
@@ -276,14 +313,7 @@ export default {
         color: #0095f6;
       }
    }
-   span .v-time-ago__text{
-        font-family: serif;
-        color:red;
-      }
-      time-ago{
-        font-family: serif;
-        color:red;
-      }
+   
       //loader
       .header-loader{
         height:100px;
@@ -325,5 +355,17 @@ export default {
         100%{
             background-position: right;
             }
+      }
+      .btn-comments:hover, .btn-add:hover{
+        cursor: pointer;
+      }
+      .time span[data-v-4e1f4bc7]{
+        margin-right: 5px;
+      }
+      .container-comment i:hover{
+        cursor: pointer;
+      }
+      .more:hover{
+        cursor: pointer;
       }
 </style>

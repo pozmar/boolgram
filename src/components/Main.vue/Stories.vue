@@ -27,12 +27,12 @@
     </div>
   </div>
      
-    <div class="image">
-      <div class="img" @click="toggle(),activate(), open(profile)" :key="i" v-for="(profile, i) in profiles">
-        <img v-if="i<=4" :src="profile.profile_picture" alt="">
-        <span v-if="i<=4"><strong>{{profile.profile_name}}</strong></span>
-        
+    <div class="image" :key="i" v-for="(profile, i) in profiles">
+      <div class="img" @click="toggle(),activate(), open(profile)" v-if="i<=4">
+        <img :src="profile.profile_picture" alt="">
+        <span><strong>{{profile.profile_name}}</strong></span>
       </div>
+      <div v-else class="hide"></div>
  
     </div>
   </div>
@@ -45,9 +45,6 @@
         </div>
          <span @click="toggle()" :class="fullscreen==true?'flex':'hide'">X</span>
     </fullscreen>
-   
-
- 
 </div>
 </template>
 
@@ -62,11 +59,6 @@ export default {
       isActive:false,
       activeProfile: undefined,
       fullscreen:false
-    
-      
-      
-     
-      
     }
   },
   created(){
@@ -75,6 +67,7 @@ export default {
   mounted(){
       setTimeout(()=>{
       axios.get('https://flynn.boolean.careers/exercises/api/boolgram/profiles').then(res=>this.profiles=res.data).then(this.setLoad).then(this.setActive);
+      
       
       }, 3000)
   },
@@ -87,33 +80,27 @@ export default {
           this.isActive =!this.isActive;
           
         },
-        changingStatus(){
-          if(this.isActive == true){
-            setTimeout(() => {
-              
-            }, 5000);
-            return this.isActive == false;
-          }
-        },
-        
         setActive(){
            this.activeProfile=this.profiles[0]
-           console.log(this.activeProfile);
+           
         },
         open(profile){
          
           this.activeProfile = profile;
-          console.log(this.activeProfile);
+          
         },
         toggle () {
+          
         this.$refs['fullscreen'].toggle();
-        
+      
+        console.log(this.$refs['fullscreen']);
         
       },
         fullscreenChange (fullscreen) {
         this.fullscreen = fullscreen;
-        console.log(this.fullscreen);
-      }
+      },
+      
+        
        
   },
   }
@@ -204,8 +191,8 @@ export default {
         span{
           align-self: baseline;
           color:white;
-
-        
+          font-size:50px;
+          margin:30px;
       }
     }
     .flex{
@@ -215,5 +202,12 @@ export default {
     }
     .hide{
       display:none;
+    }
+    .img:hover{
+      cursor: pointer;
+    }
+    :fullscreen span:hover{
+      cursor: pointer;
+      color: red;
     }
 </style>

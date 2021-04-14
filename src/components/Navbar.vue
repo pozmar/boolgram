@@ -4,6 +4,7 @@
       <div class="search">
           <input type="text" placeholder="cerca">
       </div>
+      
       <div class="react">
           <i class="far fa-heart fa-2x"></i>
           <i class="fas fa-home fa-2x"></i>
@@ -13,9 +14,15 @@
 </template>
 
 <script>
+
 export default {
 
+    
+    
 }
+    
+
+
 </script>
 
 <style lang="scss" scoped>
